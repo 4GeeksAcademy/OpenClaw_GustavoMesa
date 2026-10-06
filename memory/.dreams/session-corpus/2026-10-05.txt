@@ -1,0 +1,2 @@
+[main/sessions/main/b149a565-ddcc-402f-990a-190874dc0854#L445] User: Cómo va a estar el clima hoy en madid
+[main/sessions/main/b149a565-ddcc-402f-990a-190874dc0854#L449] Assistant: Acá va el clima de **hoy lunes 5 de octubre en Madrid** 🌤️ **Ahora mismo (8:25am):** 18°C, nublado, sensación térmica 17°C **Viento:** NE a 9km/h **Humedad:** 70% **Pronóstico del día:** - 🌡️ **Mínima:** 18°C / **Máxima:** 24°C - ☁️ **Mañana:** Nublado, 17-18°C - ☀️ 

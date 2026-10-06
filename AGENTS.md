@@ -99,6 +99,24 @@ Record camera names, SSH hosts and users, preferred voices and speakers, and dev
 - On Discord, wrap multiple links in `<>` to suppress embeds (`<https://example.com>`).
 - On WhatsApp, use **bold** or CAPS instead of headers.
 
+### Local notes (migrated from TOOLS.md)
+
+# TOOLS.md - Environment and Conventions
+
+Google Drive and Google Calendar are connected via Zapier's MCP server. Telegram is the messaging channel.
+
+## Conventions
+
+<!-- observed: 2026-10-06 | status: active -->
+- Always name created documents with the prefix AIE- followed by the date, like this: AIE-06-10-2026 — title.
+
+<!-- observed: 2026-10-06 | status: active -->
+- Always save documents in the Agente folder in my Drive.
+
+## Local Environment
+
+- **Timezone:** Europe/Madrid (CET/CEST)
+
 ## Automations - Be Proactive
 
 Use scheduled automations for recurring checks, reminders, and background work. Keep checklists and check timing in each automation's scratch. Keep it small; do not create a separate state file. Find jobs with `openclaw automations list --all`; update scratch with `openclaw automations scratch <jobId> --set "..."`.
