@@ -14,6 +14,9 @@
 <!-- observed: 2026-10-06 | status: active -->
 - Always execute the request on the first try without deviating from the topic.
 
+<!-- observed: 2026-10-08 | status: active -->
+- Always use Europe/Madrid timezone for all time-related responses unless another timezone is explicitly requested.
+
 ## Related
-- [Agent workspace](/concepts/agent-workspace)# USER.md - User Model
+- [Agent workspace](/concepts/agent-workspace)
 
