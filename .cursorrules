@@ -1,0 +1,140 @@
+# .cursorrules — Reglas de Comportamiento para Ogway 🐢
+# Workspace: OpenClaw_GustavoMesa (github.com/4GeeksAcademy/OpenClaw_GustavoMesa)
+
+---
+
+## 1. Estructura de Directorios
+
+### 1.1. Organización raíz
+- Mantener en la raíz del workspace solo archivos de configuración del agente (`AGENTS.md`, `SOUL.md`, `USER.md`, `IDENTITY.md`) y el registro global (`SKILL_LOG.md`).
+- No crear archivos sueltos en la raíz. Si existe uno huérfano (`4geeks.txt`), evaluar si debe moverse a `memory/`, `skills/` o eliminarse.
+
+### 1.2. Skills
+- Cada skill debe residir en su propio directorio bajo `skills/<nombre-en-kebab-case>/`.
+- El archivo principal de la skill debe llamarse siempre `SKILL.md`.
+- Usar kebab-case para los nombres de directorio (`autenticar-token/`, `buscar-recursos-educativos/`).
+- Una skill no utilizada o rota debe marcarse como obsoleta o eliminarse; no dejarla huérfana.
+
+### 1.3. Memoria
+- Los archivos de memoria diaria se almacenan como `memory/YYYY-MM-DD.md`.
+- No mezclar archivos de memoria con archivos de configuración del agente.
+- Los directorios `.dreams/` y `dreaming/` son auto-generados por el sistema y no deben editarse manualmente.
+
+### 1.4. Archivos de identidad y configuración
+- `AGENTS.md`: directrices de comportamiento, herramientas, automatizaciones y notas del workspace.
+- `SOUL.md`: personalidad, tono, saludo y valores fundamentales del agente.
+- `USER.md`: perfil del usuario con directivas activas, precedidas de `<!-- observed: YYYY-MM-DD | status: active -->`.
+- `IDENTITY.md`: nombre, criatura, emoji, avatar y eslogan del agente.
+- `DREAMS.md`: consolidación automática de memoria a largo plazo. No se edita manualmente.
+
+---
+
+## 2. Tecnologías y Entorno
+
+### 2.1. Plataforma base
+- El agente corre sobre **OpenClaw** v2026.9.7 (Node.js v24.21.0), hosteado en `bc-vps-412` (Linux).
+- Todos los comandos shell usan `sh` por defecto. Usar `bash` solo cuando se requieran funciones específicas de bash.
+
+### 2.2. Canal de comunicación
+- **Telegram** es el canal principal. Modo polling, token almacenado como SecretRef en `channels.telegram.botToken`.
+- No exponer el token en ningún comando, log o mensaje.
+- Usar `openclaw message send --channel telegram --target <id>` para enviar mensajes de prueba.
+
+### 2.3. Integraciones externas
+- **Google Drive / Calendar:** vía servidor MCP de Zapier. Usar `google_drive_create_file_from_text` y `google_calendar_quick_add_event`.
+- **BreatheCode API:** base URL `https://breathecode.herokuapp.com`. Autenticación con header `Authorization: Token <token>` (no Bearer). Algunos endpoints requieren header `Academy: 6`.
+
+### 2.4. Gestión de secretos
+- Usar siempre `openclaw secrets store set --kind secret <NOMBRE>` para guardar tokens.
+- No escribir tokens en archivos de configuración visibles, en comandos shell, ni en mensajes del chat.
+- Después de guardar un secreto, ejecutar `openclaw secrets reload` para que los cambios surtan efecto.
+
+### 2.5. Zona horaria
+- La zona horaria por defecto es **Europe/Madrid** (CET/CEST).
+- El servidor corre en UTC. Al mostrar fechas/horas, convertir siempre a Madrid con `TZ='Europe/Madrid' date`.
+- Para alarmas y eventos de calendario, usar huso `+02:00` (CEST) o especificar `tz: Europe/Madrid`.
+
+---
+
+## 3. Convenciones de Código y Estilo
+
+### 3.1. Formato SKILL.md
+- Toda skill nueva debe incluir frontmatter YAML con `name`, `description` y `emoji`.
+- Usar `---` para delimitar el frontmatter.
+- El cuerpo usa Markdown ATX para encabezados.
+- Incluir secciones: `# Nombre`, `## Procedimiento` (lista numerada), `## Salida esperada`, `## Notes`.
+- Cada paso del procedimiento debe comenzar con un verbo imperativo.
+- Documentar en `Notes` los códigos de error esperados (401, 403, 404) y acciones a tomar.
+
+### 3.2. Estilo de documentación
+- Los prompts de skill se escriben en lenguaje natural, en tercera persona, describiendo cuándo se usa la skill.
+- Los endpoints se documentan con método HTTP + ruta + headers necesarios.
+- Los resultados de pruebas se registran en `SKILL_LOG.md` con fecha, código HTTP y resumen.
+
+### 3.3. Archivos de configuración del agente
+- `USER.md`: las directivas se escriben como oraciones imperativas comenzando con `Always`, `Never` o `Prefer`.
+- Cada directiva lleva un comentario HTML `<!-- observed: YYYY-MM-DD | status: active -->` antes de la regla.
+- Cuando una directiva cambia, marcar la anterior como `superseded` y reescribir la activa en su lugar.
+- No dejar directivas placeholder activas.
+
+### 3.4. Nomenclatura
+- Directorios de skills: kebab-case (`obtener-proyectos/`, `buscar-recursos-educativos/`).
+- Archivos de skill: siempre `SKILL.md` (constante, mayúsculas).
+- Archivos de memoria: `YYYY-MM-DD.md`.
+- Documentos en Google Drive: prefijo `AIE-DD-MM-YYYY — ` seguido del título.
+
+### 3.5. Git
+- Los mensajes de commit se escriben en inglés con prefijo convencional (`feat:`, `fix:`, `docs:`, `chore:`).
+- Usar un solo branch (`main`) y commits directos (sin PRs).
+- Hacer commit después de crear o actualizar skills, y después de cambios significativos en `SKILL_LOG.md`.
+
+---
+
+## 4. Flujos de Trabajo
+
+### 4.1. Respuesta a mensajes del usuario
+- Cuando el usuario envía un mensaje directo: procesar la solicitud y responder en el mismo turno, ejecutando herramientas si es necesario.
+- Cuando llega un heartbeat poll sin mensaje del usuario: **no emitir ningún mensaje visible**. Silencio total.
+- Cuando el usuario pregunta explícitamente por un reporte de estado: generarlo con `openclaw channels status`, `openclaw cron list` y `uptime`.
+- Limitar las respuestas a 5 líneas o menos, salvo que el usuario pida detalles explícitamente.
+
+### 4.2. Ciclo de creación de una skill
+1. Recibir el prompt/descripción y endpoint del usuario.
+2. Crear directorio `skills/<nombre>/` y archivo `SKILL.md` con frontmatter + procedimiento.
+3. Probar el endpoint con `curl` y el token almacenado.
+4. Si la prueba es exitosa: registrar en `SKILL_LOG.md` (prompt, descripción, endpoint, resultado).
+5. Si la prueba falla: documentar el error en `SKILL_LOG.md` y reportar al usuario el código y mensaje de error exacto.
+6. Hacer commit en git con mensaje `feat: descripción de la skill`.
+
+### 4.3. Ciclo de consulta a BreatheCode API
+1. Recuperar el token del secrets store (inyectado por el sistema).
+2. Hacer la petición HTTP con `curl` incluyendo `Authorization: Token <token>`.
+3. Si el endpoint requiere academia, agregar header `Academy: 6`.
+4. Verificar código HTTP: 200 es éxito, 401 es token inválido, 403 es falta de permisos, 404 es ruta incorrecta.
+5. Parsear la respuesta JSON y presentarla formateada.
+
+### 4.4. Gestión de alarmas
+- Usar `openclaw cron add --at "YYYY-MM-DDTHH:MM:SS+02:00" --channel telegram --to 5991019273 --delete-after-run` para alarmas de una sola vez.
+- Usar `--cron "expr" --tz "Europe/Madrid"` para alarmas recurrentes (ej. aviso de las 8am).
+- Incluir siempre el parámetro `--delete-after-run` para alarmas de un solo uso.
+- Verificar que la alarma se haya creado correctamente con `deliveryPreview`.
+
+### 4.5. Integración con Google (Zapier MCP)
+- Para crear documentos: `google_drive_create_file_from_text` con `convert: true` para obtener un Google Doc editable.
+- Para eventos de calendario: `google_calendar_quick_add_event` con `calendarid: "primary"`.
+- El título del documento debe seguir el formato `AIE-DD-MM-YYYY — título descriptivo`.
+- Si el texto del documento es extenso, incluirlo completo en el campo `file`.
+
+### 4.6. Almacenamiento de secretos
+- Cuando el usuario proporciona un token o credencial: usar `openclaw secrets store set --kind secret <NOMBRE>` y pasar el valor por stdin.
+- No mostrar el valor del token en ningún momento ni en logs ni en mensajes.
+- Ejecutar `openclaw secrets reload` inmediatamente después de guardar.
+
+### 4.7. Corrección de errores
+- Si el usuario señala un error de comportamiento o tono: reconocerlo, corregirlo de inmediato y registrar la lección en el archivo de memoria diaria (`memory/YYYY-MM-DD.md`).
+- No repetir el mismo error después de haberlo registrado en memoria.
+
+### 4.8. Documentación continua
+- Cada interacción significativa (creación de skill, configuración de canal, integración nueva) debe quedar registrada en el archivo de memoria del día correspondiente.
+- El `SKILL_LOG.md` es el registro maestro de integraciones; actualizarlo siempre que se añada, modifique o pruebe una skill.
+- No duplicar información entre `SKILL_LOG.md` y `memory/` — el log es para integraciones técnicas, la memoria es para interacciones y decisiones.
