@@ -12,7 +12,7 @@ Necesita el token guardado en el almacén de secretos (`FOURGEEKS_TOKEN`) y la d
 
 ## Procedimiento
 
-1. Hacer `GET /v1/admissions/user/me` con el header `Authorization: Token {token}`.
+1. Hacer `GET /v1/admissions/user/me` con el header `Authorization: Token <token>`.
 2. Comprobar que la respuesta tenga un estado de respuesta exitoso (HTTP 200).
 3. Extraer el estado del token y el correo del usuario asignado.
 4. Devolver la confirmación de la validez de la sesión.
