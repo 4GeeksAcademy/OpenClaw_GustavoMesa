@@ -12,7 +12,7 @@ Necesita el token guardado en el almacén de secretos (`FOURGEEKS_TOKEN`) y la d
 
 ## Procedimiento
 
-1. Pedir `GET /v1/assignment/user/me/task?task_type=PROJECT` con header `Authorization: Token ***}`.
+1. Pedir `GET /v1/assignment/user/me/task?task_type=PROJECT` con header `Authorization: Token <token>`.
 2. Comprobar que la respuesta sea exitosa (HTTP 200).
 3. Extraer la lista de proyectos indicando el título (`title`), el estado de la tarea (`task_status`) y el estado de revisión (`revision_status`).
 4. Devolver la lista formateada de proyectos asignados.

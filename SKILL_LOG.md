@@ -94,3 +94,24 @@
 - **Endpoint:** `GET /v1/registry/asset?asset_type=EXERCISE&technologies=python` (sin token necesario)
 - **Resultado de la prueba (8 oct 2026):** ✅ HTTP 200 — se obtuvieron recursos. Ejemplos: Exploring Random Forest, Exploring Boosting Algorithm, Explorando Random Forest, Learn how to build HTTP requests with Python. El endpoint no necesita autenticación.
 - **Archivo de skill:** `skills/buscar-recursos-educativos/SKILL.md`
+
+### Skill 7: Nota en Drive
+- **Prompt:** "Guarda una nota en Google Drive como documento editable."
+- **Descripción:** Crea un documento en Google Drive con el texto proporcionado, usando el formato de título `AIE-DD-MM-YYYY — título`.
+- **Integración:** Zapier MCP — `google_drive_create_file_from_text` con `convert: true`
+- **Estado:** ✅ Operativa — skill creada y disponible.
+- **Archivo de skill:** `skills/nota-en-drive/SKILL.md`
+
+---
+
+## 4. Mantenimiento y Correcciones
+
+### Skill obsoleta: consultar-actividad
+- **Fecha:** 17 de octubre de 2026
+- **Motivo:** El endpoint `GET /v1/activity/me` devuelve HTTP 401. La skill fue reemplazada por `listar-cohortes`.
+- **Acción:** Marcada como `[OBSOLETA]` en su SKILL.md con `status: obsolete` y `replaced_by: listar-cohortes`. Se mantiene el archivo por registro histórico.
+
+### Correcciones aplicadas (17 oct 2026)
+- **nota-en-drive:** Añadido emoji 📝, sección Notes, imperativos en tono colombiano.
+- **autenticar-token:** Corregido typo en header de Authorization (`***}` → `<token>`).
+- **obtener-proyectos:** Corregido typo en header de Authorization (`***}` → `<token>`).
