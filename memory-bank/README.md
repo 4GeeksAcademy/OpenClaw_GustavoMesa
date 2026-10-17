@@ -13,7 +13,8 @@ A partir del 17 de octubre de 2026 se inició el proyecto **"Backoffice de Opera
 |---|---|---|
 | Paso 1 | ✅ Completado | Auditoría técnica del código base: convenciones, patrones y hallazgos |
 | Paso 2 | ✅ Completado | Actualización de `.cursorrules` con 4 nuevas reglas imperativas |
-| Paso 3 | ▶️ En ejecución | Creación/actualización del Banco de Memoria (`memory-bank/`) |
+| Paso 3 | ✅ Completado | Creación/actualización del Banco de Memoria (`memory-bank/`) |
+| Paso 4 | ✅ Completado | Implementación del flujo de gestión y centralizado de incidencias |
 
 ---
 
@@ -60,7 +61,9 @@ OpenClaw_GustavoMesa/
 │   └── dreaming/          ← Sueños procesados (deep, light, rem)
 ├── memory-bank/           ← Banco de memoria del proyecto (este directorio)
 ├── docs/                  ← Documentación técnica de auditorías
-│   └── auditoria-paso1.md ← Reporte de reconocimiento del código base
+│   ├── auditoria-paso1.md ← Reporte de reconocimiento del código base
+│   └── incidencias/       ← Registro centralizado de incidencias
+│       └── 2026-10-17--skill-obsoleta-sin-filtro.md
 └── skills/                ← Biblioteca de skills del agente
     ├── autenticar-token/  🔑  ✅ Token 4Geeks válido (HTTP 200)
     ├── obtener-proyectos/ 📁  ✅ 39 proyectos (HTTP 200)
@@ -69,6 +72,7 @@ OpenClaw_GustavoMesa/
     ├── listar-cohortes/   📋  ✅ 4 cohortes (HTTP 200, requiere Academy: 6)
     ├── buscar-recursos-educativos/ 📚  ✅ Catálogo abierto (HTTP 200, sin auth)
     ├── nota-en-drive/     📝  ✅ Google Docs vía Zapier MCP
+    ├── gestionar-incidencias/ 🚨  ✅ Gestión centralizada de incidencias
     └── consultar-actividad/ ⛔  [OBSOLETA] endpoint 401
 ```
 
@@ -83,6 +87,7 @@ OpenClaw_GustavoMesa/
 | `listar-cohortes` | `GET /v1/admissions/academy/cohort/me` | Token + `Academy: 6` | 8 oct 2026 | ✅ HTTP 200 |
 | `buscar-recursos-educativos` | `GET /v1/registry/asset` | Sin auth | 8 oct 2026 | ✅ HTTP 200 |
 | `nota-en-drive` | Zapier MCP (Drive) | SecretRef | Creada | ✅ Operativa |
+| `gestionar-incidencias` | Infraestructura local | — | 17 oct 2026 | ✅ Operativa |
 
 ### ⛔ Skills Obsoletas (1)
 
@@ -152,8 +157,8 @@ OpenClaw_GustavoMesa/
 |---|---|---|---|
 | 1 | Verificar cita duplicada de peluquería en Google Calendar | 🟡 Media | Pendiente de cancelación |
 | 2 | Recordatorio padrón: alarma 2026-10-19 11:10 Madrid | 🟡 Media | Verificar si necesita "llevar impreso" |
-| 3 | Agregar healthcheck (paso 0) a `nota-en-drive` y skills BreatheCode | 🔴 Alta | Pendiente de implementación |
-| 4 | Evaluar filtro programático de `status: obsolete` en flujo de skills | 🟡 Media | Depende de capacidades de OpenClaw |
+| 3 | Agregar healthcheck (paso 0) a `nota-en-drive` y skills BreatheCode | 🟡 Media | Pendiente de implementación en SKILL.md |
+| 4 | Evaluar filtro programático de `status: obsolete` en flujo de skills | 🟡 Media | Mitigado por skill `gestionar-incidencias` |
 | 5 | Evaluar agregar `DREAMS.md` a `.gitignore` | 🔵 Baja | Decisión de arquitectura |
 
 ---

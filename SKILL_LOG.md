@@ -115,3 +115,19 @@
 - **nota-en-drive:** Añadido emoji 📝, sección Notes, imperativos en tono colombiano.
 - **autenticar-token:** Corregido typo en header de Authorization (`***}` → `<token>`).
 - **obtener-proyectos:** Corregido typo en header de Authorization (`***}` → `<token>`).
+
+---
+
+## 5. Incidencias y Centralizado
+
+### Skill 8: Gestor de incidencias
+- **Prompt:** "Evalúa, clasifica y centraliza incidencias críticas del workspace del agente usando las reglas definidas en .cursorrules."
+- **Descripción:** Skill de infraestructura que ejecuta healthcheck del entorno, clasifica incidencias (skill obsoleta, integración caída, violación de regla, archivo huérfano) y registra cada hallazgo en `docs/incidencias/` con criticidad y acción correctiva.
+- **Fechas:** Creada el 17 de octubre de 2026 en rama `feature/incident-manager`.
+- **Reglas que implementa:** 1.2 (estado de skill), 3.1 (frontmatter completo), 4.5 (healthcheck como paso 0), 1.4 (no edita DREAMS.md).
+- **Archivo de skill:** `skills/gestionar-incidencias/SKILL.md`
+
+### Incidencia documentada: consultar-actividad obsoleta
+- **Archivo:** `docs/incidencias/2026-10-17--skill-obsoleta-sin-filtro.md`
+- **Criticidad:** 🔴 Alta
+- **Estado:** Resuelta (mitigada por reglas y skill de gestión, pendiente de filtro programático nativo)
