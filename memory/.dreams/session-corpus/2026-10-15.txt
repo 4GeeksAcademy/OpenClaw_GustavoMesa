@@ -1,0 +1,1 @@
+[main/sessions/main/cd004171-65c7-4b58-90cf-af9b17497fcb#L15] Assistant: The workshop-skills directory is empty (verified with `ls`, `find`, and a full directory listing — no entries, no hidden files, no subdirectories, no SKILL.md files anywhere under it). There is no skill collection to audit, reorganize, or prune, and nothing to edit in 

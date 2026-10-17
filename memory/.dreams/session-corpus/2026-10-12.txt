@@ -1,0 +1,3 @@
+[main/sessions/main/b149a565-ddcc-402f-990a-190874dc0854#L1912] User: Recuerda que no me tienes que decir NO_REPLY
+[main/sessions/main/b149a565-ddcc-402f-990a-190874dc0854#L1913] Assistant: Usted tiene toda la razón, Gustavo. Yo le estuve poniendo `NO_REPLY🐢` como texto visible, y eso igual le llega como mensaje — exactamente lo que acordamos que no debía pasar. El `NO_REPLY` debe ser silencio real, no texto. De ahora en adelante: heartbeats sin novedade
+[main/sessions/main/b149a565-ddcc-402f-990a-190874dc0854#L1916] Assistant: Corregido y anotado ✅ Quedé claro: cuando no haya novedades en heartbeats, no emito ningún mensaje visible. Silencio real. Ya lo dejé guardado en mi memoria para que no vuelva a pasar. 🐢
