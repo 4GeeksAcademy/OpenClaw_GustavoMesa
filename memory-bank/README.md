@@ -1,91 +1,174 @@
-# 🐢 Ogway — Resumen del Proyecto
+# 🐢 Ogway — Banco de Memoria del Proyecto
 
-## Objetivo del Producto
+## Objetivo del Producto y Contexto de Negocio
 
-Agente conversacional **Ogway** desplegado en **OpenClaw v2026.9.7** sobre el VPS `bc-vps-412`. Actúa como asistente personal de Gustavo Mesa, estudiante de **4Geeks Academy**, integrando:
+**Workspace de agente conversacional OpenClaw** para la gestión del progreso académico de Gustavo Mesa en **4Geeks Academy**. El agente **Ogway** funciona como asistente personal integrado con Telegram, Google Drive/Calendar y la API educativa de 4Geeks (BreatheCode).
 
-- **Telegram** como canal de comunicación principal.
-- **API de BreatheCode (4Geeks)** para consultar proyectos, tareas, cohortes y progreso académico.
-- **Google Drive / Calendar** vía Zapier MCP para crear documentos y eventos.
+Este repositorio contiene la configuración completa del agente: personalidad, reglas de comportamiento, skills de integración y memoria persistente. No es una aplicación backoffice tradicional — es un monorepo Markdown-driven que orquesta un agente de IA.
 
-## Stack Tecnológico
+### Evolución hacia Centralizado de Incidencias (rama `feature/incident-manager`)
+A partir del 17 de octubre de 2026 se inició el proyecto **"Backoffice de Operaciones – Centralizado de Incidencias"** con el objetivo de auditar, formalizar y robustecer las reglas de comportamiento del agente. Se ejecutan en la rama `feature/incident-manager` los siguientes pasos:
 
-| Componente | Tecnología |
-|---|---|
-| Plataforma agente | OpenClaw v2026.9.7 (Node.js v24.21.0) |
-| Host | Linux, VPS bc-vps-412 |
-| Canal comunicación | Telegram Bot API (polling, token cifrado) |
-| API educativa | BreatheCode REST API (`breathecode.herokuapp.com`) |
-| Integración Google | Zapier MCP (Drive + Calendar) |
-| Almacén secreto | OpenClaw Secrets Store (SQLite local cifrado) |
-| Control de versiones | Git → GitHub (`4GeeksAcademy/OpenClaw_GustavoMesa`) |
+| Paso | Estado | Descripción |
+|---|---|---|
+| Paso 1 | ✅ Completado | Auditoría técnica del código base: convenciones, patrones y hallazgos |
+| Paso 2 | ✅ Completado | Actualización de `.cursorrules` con 4 nuevas reglas imperativas |
+| Paso 3 | ▶️ En ejecución | Creación/actualización del Banco de Memoria (`memory-bank/`) |
 
-## Arquitectura del Workspace
+---
 
+## Stack Tecnológico y Dependencias Clave
+
+| Componente | Tecnología / Versión | Propósito |
+|---|---|---|
+| Plataforma agente | **OpenClaw** v2026.9.7 | Orquestador de agente conversacional |
+| Entorno de ejecución | **Node.js** v24.21.0 (Linux) | Runtime del Gateway |
+| Host | VPS `bc-vps-412` (Debian/Ubuntu) | Servidor dedicado |
+| Canal comunicación | **Telegram Bot API** (polling) | Interfaz con el usuario |
+| API educativa | **BreatheCode REST API** (`breathecode.herokuapp.com`) | Datos académicos de 4Geeks |
+| Integración Google | **Zapier MCP** (Drive + Calendar) | Documentos y eventos |
+| Almacén secreto | **OpenClaw Secrets Store** (SQLite cifrado) | Tokens y credenciales |
+| Control de versiones | **Git + GitHub** (`4GeeksAcademy/OpenClaw_GustavoMesa`) | Código fuente |
+
+### Autenticación API
+- Formato: `Authorization: Token <token>` (no Bearer)
+- Endpoints de admissions requieren header adicional `Academy: 6`
+- Token almacenado como `FOURGEEKS_TOKEN` en Secrets Store
+
+---
+
+## Estado Actual del Proyecto
+
+### 🔖 Ramas
+- `main` — Rama estable con configuraciones y skills operativas
+- `feature/incident-manager` — Rama activa de trabajo (Paso 3 en curso)
+
+### 📁 Estructura del Workspace
 ```
 OpenClaw_GustavoMesa/
 ├── AGENTS.md              ← Comportamiento y herramientas del agente
-├── SOUL.md                ← Personalidad y tono (tortuga tranquila)
+├── SOUL.md                ← Personalidad y tono (tortuga tranquila 🐢)
 ├── USER.md                ← Perfil y directivas de Gustavo
-├── IDENTITY.md            ← Identidad del agente (Ogway 🐢)
-├── DREAMS.md              ← Consolidación automática de memoria
+├── IDENTITY.md            ← Identidad del agente (Ogway)
+├── DREAMS.md              ← Consolidación automática de memoria (NO EDITAR)
 ├── SKILL_LOG.md           ← Bitácora de integraciones técnicas
-├── .cursorrules           ← Reglas formales de comportamiento (20 reglas)
-├── skills/                ← 7 skills funcionales + 1 obsoleta
-│   ├── autenticar-token/  ✅ Token 4Geeks válido
-│   ├── obtener-proyectos/ ✅ 39 proyectos consultados
-│   ├── obtener-trabajo-pendiente/ ✅ 34 tareas pendientes
-│   ├── resumen-de-progreso/ ✅ 79% completado (161 tareas)
-│   ├── listar-cohortes/   ✅ 4 cohortes activos
-│   ├── buscar-recursos-educativos/ ✅ Catálogo abierto
-│   ├── nota-en-drive/     ✅ Google Drive vía Zapier MCP
-│   └── consultar-actividad/ ⛔ [OBSOLETA] endpoint 401
+├── .cursorrules           ← 24 reglas de comportamiento (4 áreas)
+├── 4geeks.txt             ← Archivo temporal (vacío)
 ├── memory/                ← Memoria diaria + sueños auto-generados
-└── memory-bank/           ← Resumen del proyecto (este archivo)
+│   ├── YYYY-MM-DD.md      ← Registros diarios
+│   ├── .dreams/           ← Correlaciones de sesiones (auto-generado)
+│   └── dreaming/          ← Sueños procesados (deep, light, rem)
+├── memory-bank/           ← Banco de memoria del proyecto (este directorio)
+├── docs/                  ← Documentación técnica de auditorías
+│   └── auditoria-paso1.md ← Reporte de reconocimiento del código base
+└── skills/                ← Biblioteca de skills del agente
+    ├── autenticar-token/  🔑  ✅ Token 4Geeks válido (HTTP 200)
+    ├── obtener-proyectos/ 📁  ✅ 39 proyectos (HTTP 200)
+    ├── obtener-trabajo-pendiente/ ⏳  ✅ 34 tareas pendientes (HTTP 200)
+    ├── resumen-de-progreso/ 📊  ✅ 161 tareas, 79% completado (HTTP 200)
+    ├── listar-cohortes/   📋  ✅ 4 cohortes (HTTP 200, requiere Academy: 6)
+    ├── buscar-recursos-educativos/ 📚  ✅ Catálogo abierto (HTTP 200, sin auth)
+    ├── nota-en-drive/     📝  ✅ Google Docs vía Zapier MCP
+    └── consultar-actividad/ ⛔  [OBSOLETA] endpoint 401
 ```
 
-## Estado Actual
+### ✅ Skills Operativas (7)
 
-### ✅ Skills operativas (7)
-| Skill | Endpoint | Estado | Notas |
+| Skill | Endpoint | Auth | Última prueba | Estado |
+|---|---|---|---|---|
+| `autenticar-token` | `GET /v1/admissions/user/me` | Token | 8 oct 2026 | ✅ HTTP 200 |
+| `obtener-proyectos` | `GET /.../task?task_type=PROJECT` | Token | 8 oct 2026 | ✅ HTTP 200 |
+| `obtener-trabajo-pendiente` | `GET /.../task?task_status=PENDING` | Token | 8 oct 2026 | ✅ HTTP 200 |
+| `resumen-de-progreso` | `GET /.../task` (sin filtro) | Token | 8 oct 2026 | ✅ HTTP 200 |
+| `listar-cohortes` | `GET /v1/admissions/academy/cohort/me` | Token + `Academy: 6` | 8 oct 2026 | ✅ HTTP 200 |
+| `buscar-recursos-educativos` | `GET /v1/registry/asset` | Sin auth | 8 oct 2026 | ✅ HTTP 200 |
+| `nota-en-drive` | Zapier MCP (Drive) | SecretRef | Creada | ✅ Operativa |
+
+### ⛔ Skills Obsoletas (1)
+
+| Skill | Endpoint | Motivo | Reemplazo | Estado |
+|---|---|---|---|---|
+| `consultar-actividad` | `GET /v1/activity/me` | HTTP 401 (sin acceso) | `listar-cohortes` | ⛔ `status: obsolete` |
+
+**Riesgo detectado en auditoría (Paso 1):** El sistema de skills de OpenClaw no filtra por metadato `status: obsolete`. Una invocación directa a `consultar-actividad` aún se ejecutaría y fallaría. Se añadió regla en `.cursorrules` para mitigar esto (ver sección de cumplimiento abajo).
+
+---
+
+## Correcciones Aplicadas (Fase 4, 17 oct 2026)
+
+| # | Corrección | Archivo | Detalle |
 |---|---|---|---|
-| autenticar-token | `GET /v1/admissions/user/me` | ✅ HTTP 200 | Token válido, sesión activa |
-| obtener-proyectos | `GET /.../task?task_type=PROJECT` | ✅ HTTP 200 | 39 proyectos listados |
-| obtener-trabajo-pendiente | `GET /.../task?task_status=PENDING` | ✅ HTTP 200 | 34 tareas pendientes |
-| resumen-de-progreso | `GET /.../task` (sin filtro) | ✅ HTTP 200 | 161 tareas, 79% completado |
-| listar-cohortes | `GET /v1/admissions/academy/cohort/me` | ✅ HTTP 200 | Requiere header `Academy: 6` |
-| buscar-recursos-educativos | `GET /v1/registry/asset` | ✅ HTTP 200 | Sin autenticación |
-| nota-en-drive | Zapier MCP | ✅ Operativa | Google Doc con formato `AIE-DD-MM-YYYY` |
+| 1 | Typo en header Authorization | `autenticar-token/SKILL.md` | `***}` → `<token>` |
+| 2 | Typo en header Authorization | `obtener-proyectos/SKILL.md` | `***}` → `<token>` |
+| 3 | Emoji faltante + sección Notes + tono colombiano | `nota-en-drive/SKILL.md` | Añadido 📝, Notes, imperativos corregidos |
+| 4 | Marcada como obsoleta | `consultar-actividad/SKILL.md` | `status: obsolete` + `replaced_by: listar-cohortes` |
+| 5 | Registro de skill y mantenimiento | `SKILL_LOG.md` | Añadida Skill 7 (nota-en-drive) y sección 4 (Mantenimiento) |
+| 6 | Archivo huérfano eliminado y restaurado | `4geeks.txt` | Eliminado del control de versiones, luego restaurado por solicitud |
 
-### ⛔ Skill obsoleta
-- **consultar-actividad** — endpoint `GET /v1/activity/me` devuelve 401. Reemplazada por `listar-cohortes`.
+---
 
-### 📋 Reglas de comportamiento (Fase 2-3)
-Se definieron **20 reglas** en `.cursorrules` organizadas en 4 áreas:
-1. **Estructura de Directorios** — skills en kebab-case, memoria diaria con fecha
-2. **Tecnologías y Entorno** — OpenClaw, Telegram, BreatheCode, Zapier, secretos cifrados
-3. **Convenciones de Código** — SKILL.md con frontmatter YAML, directivas imperativas, commits convencionales
-4. **Flujos de Trabajo** — ciclo crear-probar-registrar, silencio en heartbeats, corrección de errores
+## Análisis de Cumplimiento: Nuevas Reglas del `.cursorrules`
 
-### 🔧 Correcciones aplicadas (Fase 4, 17 oct 2026)
-- `4geeks.txt` eliminado del repositorio (archivo huérfano)
-- `autenticar-token`: typo `***}` corregido a `<token>`
-- `obtener-proyectos`: typo `***}` corregido a `<token>`
-- `nota-en-drive`: añadido emoji 📝, sección Notes, imperativos en tono colombiano
-- `consultar-actividad`: marcada como `[OBSOLETA]` con `status: obsolete`
-- `SKILL_LOG.md`: actualizado con Skill 7 y sección 4 de Mantenimiento
+### Regla 1 — Estado de Skills (Sección 1.2)
+**Enunciado:** "Prohibido ejecutar skills marcadas como `[OBSOLETA]` o con `status: obsolete` / `enabled: false`."
+
+**Cumplimiento actual:**
+- `consultar-actividad` tiene `status: obsolete` en su frontmatter. ✅
+- Las 7 skills operativas NO tienen `status: obsolete`. ✅
+- **Brecha:** OpenClaw no tiene un filtro nativo de `status`. La regla depende de que el agente la cumpla manualmente. ⚠️
+
+**Acción recomendada:** Agregar verificación programática en el flujo de skills del agente para que rechace automáticamente skills con `status: obsolete` antes de ejecutar.
+
+### Regla 2 — Healthcheck MCP (Sección 4.5)
+**Enunciado:** "Toda skill que dependa de integraciones externas debe incluir un paso 0 de verificación de conectividad."
+
+**Cumplimiento actual:**
+- `nota-en-drive` tiene la dependencia documentada en `Notes` pero **no tiene paso 0 de healthcheck** en el procedimiento. ❌
+- Las skills de BreatheCode API dependen del token pero no verifican conectividad antes de la petición. ❌
+
+**Acción recomendada:** Modificar los SKILL.md de skills con dependencias externas para incluir un paso 0 de healthcheck.
+
+### Regla 3 — Esquema Estricto Frontmatter (Sección 3.1)
+**Enunciado:** "Todo SKILL.md debe incluir obligatoriamente `name`, `description` y `emoji`."
+
+**Cumplimiento actual:**
+- 7 de 8 skills tienen `name`, `description` y `emoji`. ✅
+- `nota-en-drive` fue corregido para incluir `emoji` (📝). ✅
+- **Saldo:** 8/8 skills cumplen. ✅
+
+### Regla 4 — Exclusión de DREAMS.md (Sección 1.4)
+**Enunciado:** "No editar manualmente archivos de consolidación automática."
+
+**Cumplimiento actual:**
+- `DREAMS.md` fue modificado en el commit `b3e616c` (antes de la regla). ⚠️
+- No hay ediciones posteriores a la regla. ✅
+- Se recomienda agregar `DREAMS.md` a `.gitignore` si el sistema lo regenera automáticamente.
+
+---
 
 ## Pendientes Prioritarios
 
-1. **Verificar cita duplicada de peluquería** en Google Calendar (evento creado con fecha 09/10 en vez de 19/10). Pendiente de cancelación.
-2. **Recordatorio padrón**: alarma programada para 2026-10-19 11:10 Madrid. Verificar si necesita mención explícita de "llevar impreso".
-3. **API 4Geeks**: la Sección 1 de SKILL_LOG.md documenta el proceso de descubrimiento fallido (endpoints 404). Se conserva como registro histórico.
+| # | Pendiente | Prioridad | Estado |
+|---|---|---|---|
+| 1 | Verificar cita duplicada de peluquería en Google Calendar | 🟡 Media | Pendiente de cancelación |
+| 2 | Recordatorio padrón: alarma 2026-10-19 11:10 Madrid | 🟡 Media | Verificar si necesita "llevar impreso" |
+| 3 | Agregar healthcheck (paso 0) a `nota-en-drive` y skills BreatheCode | 🔴 Alta | Pendiente de implementación |
+| 4 | Evaluar filtro programático de `status: obsolete` en flujo de skills | 🟡 Media | Depende de capacidades de OpenClaw |
+| 5 | Evaluar agregar `DREAMS.md` a `.gitignore` | 🔵 Baja | Decisión de arquitectura |
 
-## Convenciones Clave
+---
 
-- **Zona horaria:** Europe/Madrid (CET/CEST). El servidor corre en UTC.
-- **Tono:** Colombiano, amigable y técnico, sin cortesías superfluas.
+## Convenciones del Proyecto
+
+- **Zona horaria:** Europe/Madrid (CET/CEST). Servidor en UTC.
+- **Tono:** Colombiano, amigable y técnico.
 - **Respuestas:** Máximo 5 líneas salvo que pida detalles.
 - **Silencio en heartbeats:** Sin novedades = cero mensajes visibles.
+- **Nomenclatura:** directorios kebab-case, SKILL.md constante, memoria `YYYY-MM-DD.md`.
+- **Git:** Commits en inglés con prefijo convencional (`feat:`, `fix:`, `docs:`, `chore:`, `test:`).
+- **Documentos en Drive:** Prefijo `AIE-DD-MM-YYYY — título`.
 - **Autenticación API:** `Authorization: Token <token>` (no Bearer). Endpoints de admissions requieren `Academy: 6`.
-- **Git:** Commits en inglés con prefijo convencional (`feat:`, `fix:`, `test:`, `chore:`).
+
+---
+
+*Última actualización: 17 de octubre de 2026 — Rama `feature/incident-manager` (Paso 3)*
