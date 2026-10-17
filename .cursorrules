@@ -14,6 +14,7 @@
 - El archivo principal de la skill debe llamarse siempre `SKILL.md`.
 - Usar kebab-case para los nombres de directorio (`autenticar-token/`, `buscar-recursos-educativos/`).
 - Una skill no utilizada o rota debe marcarse como obsoleta o eliminarse; no dejarla huérfana.
+- **Estado de skill:** Toda skill debe incluir metadato `status` en su frontmatter (`active` u `obsolete`). Queda estrictamente prohibido ejecutar cualquier skill marcada como `[OBSOLETA]` o con metadato `status: obsolete` o `enabled: false`. El agente debe filtrar y omitir automáticamente estas skills en cualquier flujo de ejecución.
 
 ### 1.3. Memoria
 - Los archivos de memoria diaria se almacenan como `memory/YYYY-MM-DD.md`.
@@ -25,7 +26,7 @@
 - `SOUL.md`: personalidad, tono, saludo y valores fundamentales del agente.
 - `USER.md`: perfil del usuario con directivas activas, precedidas de `<!-- observed: YYYY-MM-DD | status: active -->`.
 - `IDENTITY.md`: nombre, criatura, emoji, avatar y eslogan del agente.
-- `DREAMS.md`: consolidación automática de memoria a largo plazo. No se edita manualmente.
+- `DREAMS.md`: consolidación automática de memoria a largo plazo. **No debe ser modificado manualmente por desarrolladores ni agentes en flujos de trabajo convencionales.** Este archivo es auto-generado por el sistema de sueños del agente y cualquier edición manual será sobrescrita en el próximo ciclo de consolidación.
 
 ---
 
@@ -58,8 +59,8 @@
 
 ## 3. Convenciones de Código y Estilo
 
-### 3.1. Formato SKILL.md
-- Toda skill nueva debe incluir frontmatter YAML con `name`, `description` y `emoji`.
+### 3.1. Esquema estricto de SKILL.md (Frontmatter y Secciones)
+- **Todo archivo `SKILL.md` debe incluir obligatoriamente en su YAML frontmatter los campos `name`, `description` y `emoji`.** Ninguna skill puede crearse sin estos tres campos.
 - Usar `---` para delimitar el frontmatter.
 - El cuerpo usa Markdown ATX para encabezados.
 - Incluir secciones: `# Nombre`, `## Procedimiento` (lista numerada), `## Salida esperada`, `## Notes`.
@@ -119,22 +120,28 @@
 - Incluir siempre el parámetro `--delete-after-run` para alarmas de un solo uso.
 - Verificar que la alarma se haya creado correctamente con `deliveryPreview`.
 
-### 4.5. Integración con Google (Zapier MCP)
+### 4.5. Healthcheck obligatorio para integraciones externas
+- **Toda skill que dependa de integraciones o servicios externos (Zapier MCP, BreatheCode API, Telegram) debe incluir obligatoriamente un paso previo de verificación de conectividad (healthcheck) antes de ejecutar el procedimiento principal.**
+- El healthcheck debe ser el **paso 0** del procedimiento. Si falla, el agente debe informar al usuario que el servicio no está disponible y abortar la ejecución.
+- No ejecutar ningún paso posterior si el healthcheck falla.
+
+### 4.6. Integración con Google (Zapier MCP)
 - Para crear documentos: `google_drive_create_file_from_text` con `convert: true` para obtener un Google Doc editable.
 - Para eventos de calendario: `google_calendar_quick_add_event` con `calendarid: "primary"`.
 - El título del documento debe seguir el formato `AIE-DD-MM-YYYY — título descriptivo`.
 - Si el texto del documento es extenso, incluirlo completo en el campo `file`.
+- **Antes de cualquier operación MCP, ejecutar healthcheck de conectividad con el servidor Zapier.**
 
-### 4.6. Almacenamiento de secretos
+### 4.7. Almacenamiento de secretos
 - Cuando el usuario proporciona un token o credencial: usar `openclaw secrets store set --kind secret <NOMBRE>` y pasar el valor por stdin.
 - No mostrar el valor del token en ningún momento ni en logs ni en mensajes.
 - Ejecutar `openclaw secrets reload` inmediatamente después de guardar.
 
-### 4.7. Corrección de errores
+### 4.8. Corrección de errores
 - Si el usuario señala un error de comportamiento o tono: reconocerlo, corregirlo de inmediato y registrar la lección en el archivo de memoria diaria (`memory/YYYY-MM-DD.md`).
 - No repetir el mismo error después de haberlo registrado en memoria.
 
-### 4.8. Documentación continua
+### 4.9. Documentación continua
 - Cada interacción significativa (creación de skill, configuración de canal, integración nueva) debe quedar registrada en el archivo de memoria del día correspondiente.
 - El `SKILL_LOG.md` es el registro maestro de integraciones; actualizarlo siempre que se añada, modifique o pruebe una skill.
 - No duplicar información entre `SKILL_LOG.md` y `memory/` — el log es para integraciones técnicas, la memoria es para interacciones y decisiones.
